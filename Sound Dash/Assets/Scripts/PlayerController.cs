@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public bool grounded; //boolean to check if the player is grounded, prevents double jumping
     public LayerMask whatIsGround; //tells whatisground which layer is the ground layer
     public Animator anim;
+    public GameManager gameManager;
 
     private Rigidbody2D rb;
     private bool sliding = false;
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
         
 
-        rb.velocity = new Vector2(moveSpeed, rb.velocity.y); //makes the velocity of the character ewual to movespeed on the x and we don't change the y
+        rb.velocity = new Vector2(moveSpeed, rb.velocity.y); //makes the velocity of the character equal to movespeed on the x and we don't change the y
 
         
 
@@ -81,5 +82,19 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("Speed", rb.velocity.x); //sets Speed float parameter in the animator to equal your velocity in the x direction
         anim.SetBool("Grounded", grounded); //sets the Grounded parameter in the animator to the true false value of whether we are grounded, set above 
 
+        if (rb.transform.position.y == -28) //kills our player if they fall off the screen
+        {
+            gameManager.RestartGame();
+        }
+
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) //kills our player if they run into a barrier
+    {
+        if (collision.gameObject.tag == "barrier")
+        {
+            gameManager.RestartGame();
+        }
     }
 }
